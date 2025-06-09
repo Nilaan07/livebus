@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GPS Sender</title>
+</head>
+<body>
+  <h2>Sending Location to Firebase...</h2>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzHFmMVOHPtSKdJ-tDwfUoYeDviJH7bVA",
+      authDomain: "livebustracker-4d0de.firebaseapp.com",
+      databaseURL: "https://livebustracker-4d0de-default-rtdb.firebaseio.com",
+      projectId: "livebustracker-4d0de",
+      storageBucket: "livebustracker-4d0de.appspot.com",
+      messagingSenderId: "1002291151573",
+      appId: "1:1002291151573:web:f96b29a506507ce066585c"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const locationRef = database.ref("bus1/location");
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          locationRef.set({ lat, lng });
+          console.log("Location sent: ", lat, lng);
+        },
+        (err) => {
+          alert("GPS Error: " + err.message);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+      );
+    } else {
+      alert("GPS not supported");
+    }
+  </script>
+</body>
+</html>
